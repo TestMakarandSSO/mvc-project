@@ -20,6 +20,8 @@ jobs:
         run: dotnet build
       - name: Test Project
         run: dotnet test
+      - name: Check for vulnerable packages
+        run: dotnet list package --vulnerable
       - name: Publish Project
         run: dotnet publish -c Release -o ./publish
       - name: Create ZIP package
