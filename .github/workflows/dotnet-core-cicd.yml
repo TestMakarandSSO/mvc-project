@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Setup .Net Core
@@ -17,16 +17,24 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Check for vulnerable packages
-        shell: pwsh
-        run: |
-          $result = dotnet list package --vulnerable --include-transitive
-          echo "$result"
+      # - name: Check for vulnerable packages
+      #   shell: pwsh
+      #   run: |
+      #     $result = dotnet list package --vulnerable --include-transitive
+      #     echo "$result"
 
-          if ($result -match "Severity") {
-            Write-Error "Vulnerabilities detected. Failing the build."
+      #     if ($result -match "Severity") {
+      #       Write-Error "Vulnerabilities detected. Failing the build."
+      #       exit 1
+      #     }
+
+      - name: Check for vulnerable packages
+        run: |
+          dotnet list package --vulnerable --include-transitive | tee vuln.txt
+          if grep -q "Severity" vuln.txt; then
+            echo "Vulnerabilities detected"
             exit 1
-          }
+          fi
 
       - name: Build Project
         run: dotnet build
