@@ -1,21 +1,21 @@
-name: 02-Simple-Workflow
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
-jobs:
-  build:
-    # runs-on: ubuntu-latest
-    runs-on: self-hosted
-    steps:
-      - name: build job
-        run: echo "Build Job is executing..."
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    environment: prod
-    steps:
-      - name: deploy job
-        run: echo "Deploy Job is executing..."
+# name: 02-Simple-Workflow
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
+#   workflow_dispatch:
+# jobs:
+#   build:
+#     # runs-on: ubuntu-latest
+#     runs-on: self-hosted
+#     steps:
+#       - name: build job
+#         run: echo "Build Job is executing..."
+#   deploy:
+#     runs-on: windows-latest
+#     needs: build
+#     environment: prod
+#     steps:
+#       - name: deploy job
+#         run: echo "Deploy Job is executing..."
