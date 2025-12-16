@@ -1,0 +1,67 @@
+name: 04-Dotnet-Core-CodeQL
+on:
+    push:
+        branches: ["main"]
+    workflow_dispatch:
+jobs:
+    codeql-analysis:
+        name: CodeQL Analysis
+        runs-on: windows-latest
+        permissions:
+            actions: read
+            contents: read
+            security-events: write
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Initialize CodeQL
+              uses: github/codeql-action/init@v3
+              with:
+                  languages: csharp
+                  queries: security-and-quality
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: "8.0.x"
+
+            - name: Build
+              run: dotnet build --configuration Release
+
+            - name: Perform CodeQL Analysis
+              uses: github/codeql-action/analyze@v3
+    codeql-gate:
+        name: CodeQL Quality Gate
+        needs: codeql-analysis
+        runs-on: ubuntu-latest
+        permissions:
+            security-events: read
+
+        steps:
+            - name: Check CodeQL alerts
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  alerts=$(gh api \
+                    repos/${{ github.repository }}/code-scanning/alerts \
+                    --jq '.[] | select(.state=="open")')
+
+                  if [ -n "$alerts" ]; then
+                    echo "CodeQL issues found. Blocking deployment."
+                    exit 1
+                  else
+                    echo "No CodeQL issues found."
+                  fi
+
+    deploy:
+        name: Deploy to Azure
+        needs:
+            - codeql-analysis
+            - codeql-gate
+        runs-on: windows-latest
+
+        steps:
+            - name: Dummy Step
+              run: echo "Deploying to Azure..."
