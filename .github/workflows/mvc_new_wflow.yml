@@ -1,28 +1,28 @@
-name: 02-Simple-Workflow
+# name: 02-Simple-Workflow
 
-on:
+# # on:
 
-  push:
+# #   push:
 
-    branches: [ "main" ]
+#   #   branches: [ "main" ]
 
-  pull_request:
+#   # pull_request:
 
-    branches: [ "main" ]
+#   #   branches: [ "main" ]
 
-  workflow_dispatch:
+#   # workflow_dispatch:
 
-jobs:
+# jobs:
 
-  build:
+#   build:
 
-    # runs-on: ubuntu-latest
+#     # runs-on: ubuntu-latest
 
-    runs-on: self-hosted
+#     runs-on: self-hosted
 
-    steps:
+#     steps:
 
-      - name: build job
+#       - name: build job
 
-        run: echo "Build Job is executing..."
+#         run: echo "Build Job is executing..."
  
